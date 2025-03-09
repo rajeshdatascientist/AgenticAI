@@ -1,4 +1,4 @@
-name: Run Python Hello World
+name: Python Application CI
 
 on:
   push:
@@ -7,22 +7,24 @@ on:
   pull_request:
     branches:
       - main
-  workflow_dispatch:
 
 jobs:
-  run-python-script:
+  build:
     runs-on: ubuntu-latest
 
     steps:
       - name: Checkout repository
         uses: actions/checkout@v4
-      
+
       - name: Set up Python
         uses: actions/setup-python@v4
         with:
-          python-version: '3.x'
+          python-version: '3.10'
 
-      - name: Run Hello World script
+      - name: Install dependencies
         run: |
-          echo "print('Hello, World!')" > hello.py
-          python hello.py
+          python -m pip install --upgrade pip
+          if [ -f requirements.txt ]; then pip install -r requirements.txt; fi
+
+      - name: Run application
+        run: python main.py
